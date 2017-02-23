@@ -64,14 +64,9 @@ def get_attachment_url(name, table, field, index=0):
 def post_attachment(fpath, table, name, field, valid_fields=None):
     """Post an attachment to the given table, record and field
     
-    Given a figure with a .save(filepath) method, post the png image
-    as an attachment to the record with the given assay ID. The figure
-    can be posted to the fields 'O2 tension plot' (default) or 
-    'O2 rate plot'.
+    Given a local filepath, post the file as an attachment to the 
+    record with the given name, using the given table and field. 
     """
-    if valid_fields is not None:
-        if field not in valid_fields:
-            raise ValueError('Invalid field {}. Must be one of '.format(field, ', '.join(valid_fields)))
 
     # Upload to S3, keyed by content, get public URL
     fig_url = upload_to_s3_as_md5_hash(fpath)
@@ -84,8 +79,7 @@ def post_attachment(fpath, table, name, field, valid_fields=None):
     }
     new_record = {'fields': {field: [attachment]}}
     
-    # Post to Airtable record, OVERWRITING previous data in 
-    # fields 'O2 tension plot' and 'O2 rate plot'. To append
+    # Post to Airtable record, OVERWRITING previous data. To append
     # instead of overwrite, get existing record and include all
     # attachment objects in new_record.
     record_key = find_record_id(name, table)
