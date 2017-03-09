@@ -2,7 +2,7 @@ import os
 import requests
 
 AIRTABLE_API_KEY = os.environ.get('AIRTABLE_API_KEY')
-API_ENDPOINT = os.environ.get('AIRTABLE_API_ENDPOINT')
+AIRTABLE_API_ENDPOINT = os.environ.get('AIRTABLE_API_ENDPOINT')
 
 from .s3 import upload_to_s3_as_md5_hash
 
@@ -10,7 +10,7 @@ import logging
 
 def _request(method, table, path, **kwargs):
     headers = {'Authorization': 'Bearer ' + AIRTABLE_API_KEY}
-    url = API_ENDPOINT + table + path
+    url = AIRTABLE_API_ENDPOINT + table + path
 
     response = requests.request(method.upper(), url, headers=headers, 
                                 **kwargs)

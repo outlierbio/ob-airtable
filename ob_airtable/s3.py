@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 import warnings
 
 S3_BUCKET = os.environ.get('AIRTABLE_BUCKET')
-S3_FOLDER = 'prep-db/attachments/'
+S3_FOLDER = os.environ.get('AIRTABLE_FOLDER') or 'attachments/'
 
 try:
     import boto3

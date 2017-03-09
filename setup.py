@@ -7,5 +7,8 @@ setup(
     version='0.1',
     url='http://github.com/outlierbio/ob-airtable',
     packages=find_packages(),
-    description='Airtable client with support for storing attachments to S3 and polling for updates'
+    description='Airtable client with support for storing attachments to S3 and polling for updates',
+    install_requires=[
+        'requests'
+    ]
 )
