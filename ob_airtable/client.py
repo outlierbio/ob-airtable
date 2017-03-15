@@ -1,4 +1,5 @@
 import os
+import os.path as op
 import requests
 
 AIRTABLE_API_KEY = os.environ.get('AIRTABLE_API_KEY')
@@ -100,13 +101,14 @@ class AirtableClient(object):
         """
 
         # Upload to S3, keyed by content, get public URL
-        fig_url = upload_to_s3_as_md5_hash(fpath)
+        url = upload_to_s3_as_md5_hash(fpath)
+        ext = op.splitext(fpath)[1]
 
         # Create attachment object and add to record
         label = field.replace(' ', '_').lower()
         attachment = {
-                'url': fig_url,
-                'filename': '{}_{}.png'.format(name, label)
+                'url': url,
+                'filename': '{}_{}{}'.format(name, label, ext)
         }
         new_record = {'fields': {field: [attachment]}}
         
@@ -127,7 +129,9 @@ def update_if_missing(records, field, required_field, function):
     provide function on the record Name
     """
     for rec in records:
-        name = rec['fields']['Name']
+        name = rec['fields'].get('Name')
+        if not name:
+            continue
         if field in rec['fields']: 
             logging.debug('Record {} already has "{}".'.format(name, field))
             continue
