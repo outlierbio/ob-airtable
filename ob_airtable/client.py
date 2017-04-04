@@ -75,6 +75,8 @@ class AirtableClient(object):
             'filterByFormula': '{Name} = "%s"' % name,
         }
         content = self._request('get', table, '/', params=params)
+        if len(content['records']) == 0:
+            return None
         return content['records'][0]['id']
 
     def get_record(self, key, table):
