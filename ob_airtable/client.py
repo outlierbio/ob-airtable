@@ -1,3 +1,4 @@
+import logging
 import os
 import os.path as op
 import requests
@@ -7,7 +8,7 @@ AIRTABLE_API_ENDPOINT = os.environ.get('AIRTABLE_API_ENDPOINT')
 
 from .s3 import upload_to_s3_as_md5_hash
 
-import logging
+logger = logging.getLogger(__name__)
 
 
 class AirtableClient(object):
@@ -42,7 +43,7 @@ class AirtableClient(object):
 
             # Loop to get additional records from pagination
             while 'offset' in content:
-                logging.debug('retrieving page, offset: {}'.format(content['offset']))
+                logger.debug('retrieving page, offset: {}'.format(content['offset']))
                 params['offset'] = content['offset']
                 response = requests.request('GET', url, headers=headers, params=params, **kwargs)
                 response.raise_for_status()
@@ -135,15 +136,15 @@ def update_if_missing(records, field, required_field, function):
         if not name:
             continue
         if field in rec['fields']: 
-            logging.debug('Record {} already has "{}".'.format(name, field))
+            logger.debug('Record {} already has "{}".'.format(name, field))
             continue
 
         if required_field not in rec['fields']:
-            logging.debug('Record {} is missing "{}".'.format(name, required_field))
+            logger.debug('Record {} is missing "{}".'.format(name, required_field))
             continue
 
-        logging.info('Updating {} from {} for {}'.format(field, required_field, name))
+        logger.info('Updating {} from {} for {}'.format(field, required_field, name))
         try:
             function(name)
         except Exception as e:
-            logging.warning(e)
+            logger.warning(e)
