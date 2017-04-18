@@ -55,6 +55,14 @@ class AirtableClient(object):
 
         return content
 
+    def create_record(self, record, table):
+        if 'fields' in record:
+            new_record = record
+        else:
+            new_record = {'fields': record} 
+
+        return self._request('post', table, '/', json=new_record)
+
     def get_record_ids(self,table, name=True):
         params = {
             'fields[]': 'Name',
