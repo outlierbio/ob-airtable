@@ -79,6 +79,9 @@ class AirtableClient(object):
         params = {'fields[]': fields}
         return self._request('get', table, '/', params=params)['records']
 
+    def get_records(self, table):
+        return self._request('get', table, '/')['records']
+
     def find_record_id(self, name, table):
         params = {
             'filterByFormula': '{Name} = "%s"' % name,
