@@ -146,7 +146,8 @@ def update_if_missing(records, field, required_field, function):
         name = rec['fields'].get('Name')
         if not name:
             continue
-        if field in rec['fields']: 
+            
+        if rec['fields'].get(field): 
             logger.debug('Record {} already has "{}".'.format(name, field))
             continue
 
