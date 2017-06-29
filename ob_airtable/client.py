@@ -2,6 +2,7 @@ import logging
 import os
 import os.path as op
 import requests
+from urllib.parse import quote
 
 AIRTABLE_API_KEY = os.environ.get('AIRTABLE_API_KEY')
 AIRTABLE_API_ENDPOINT = os.environ.get('AIRTABLE_API_ENDPOINT')
@@ -31,7 +32,8 @@ class AirtableClient(object):
 
     def _request(self, method, table, path, params={}, **kwargs):
         headers = {'Authorization': 'Bearer ' + self.api_key}
-        url = self.endpoint + table + path
+        table_url_encoded = quote(table)
+        url = self.endpoint + table_url_encoded + path
 
         response = requests.request(method.upper(), url, headers=headers, params=params, **kwargs)
         response.raise_for_status()
